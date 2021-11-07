@@ -5,3 +5,5 @@ media/
 emosaic/tests/output/*
 .ipynb_checkpoints/
 cache/*
+.idea
+perso/*
