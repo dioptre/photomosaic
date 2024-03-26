@@ -40,6 +40,7 @@ parser.add_argument("--height-aspect", dest='height_aspect', type=float, default
 parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
 parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1., 
     help="Downsize the image by this much before vectorizing")
+parser.add_argument("--no-duplicates-radius", dest='no_duplicates_radius', type=int, default=0, help="No duplicates over a given radius")
 
 args = parser.parse_args()
 
@@ -75,7 +76,9 @@ mosaic, rect_starts, _ = mosaicify(
     randomness=args.randomness,
     opacity=args.opacity,
     best_k=args.best_k,
-    trim=not args.no_trim)
+    trim=not args.no_trim,
+    no_duplicates_radius=args.no_duplicates_radius,
+)
 
 # convert to 8 bit unsigned integers
 mosaic_img = mosaic.astype(np.uint8)
@@ -85,6 +88,7 @@ try:
     plt.figure(figsize = (64, 30))
     plt.imshow(mosaic_img[:, :, [2,1,0]], interpolation='nearest')
 except:
+    print("Failed plt imshow")
     pass
 
 # save to disk

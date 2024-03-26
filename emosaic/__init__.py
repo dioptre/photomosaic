@@ -11,8 +11,9 @@ from emosaic.utils.image import divide_image_rectangularly, to_vector
 def mosaicify(
         target_image, 
         tile_h, tile_w, 
-        tile_index, tile_images, 
-        verbose=0,
+        tile_index,
+        tile_images,
+        verbose=1,
         use_stabilization=False,
         stabilization_threshold=0.95,
         randomness=0.0,
@@ -20,10 +21,20 @@ def mosaicify(
         best_k=1,
         trim=True,
         uniform_k=True,
+        no_duplicates_radius=0,
         no_duplicates=True,
     ):
     try:
         rect_starts = divide_image_rectangularly(target_image, h_pixels=tile_h, w_pixels=tile_w)
+
+        indexes = {(coord[0]/tile_h, coord[1]/tile_w): None for coord in rect_starts}
+        max_ix = max([coord[0] for coord in indexes.keys()])
+        max_iy = max([coord[1] for coord in indexes.keys()])
+        # if verbose:
+        #     print("no_duplicates_radius: " + str(no_duplicates_radius))
+        #     print("indexes: " + str(indexes))
+        #     print("(max_x, max_y)): " + str((max_ix, max_iy)))
+
         mosaic = np.zeros(target_image.shape)
 
         if use_stabilization:
@@ -38,6 +49,8 @@ def mosaicify(
         seen_idx = { -1 }
         for (j, (x, y)) in enumerate(rect_starts):
             starttime = time.time()
+
+            ix, iy = x / tile_h, y / tile_w
             
             # get our target region & vectorize it
             target = target_image[x : x + tile_h, y : y + tile_w]
@@ -46,11 +59,12 @@ def mosaicify(
             
             # find nearest codebook image
             try:
-                if best_k == 1:
-                    dist, I = tile_index.search(v, k=1)
-                    idx = I[0][0]
-                else:
-                    if uniform_k:
+                while True:
+
+                    if best_k == 1:
+                        dist, I = tile_index.search(v, k=1)
+                        idx = I[0][0]
+                    elif uniform_k:
                         dist, I = tile_index.search(v, k=best_k)
                         idx = random.choice(I[0])
                     else:
@@ -59,7 +73,27 @@ def mosaicify(
                         deviation_from_max = np.abs(distances - distances.max())
                         weighting = deviation_from_max / deviation_from_max.sum()
                         idx = np.random.choice(I[0], p=weighting)
+
+                    # if verbose:
+                    #     print("(j, x, y): " + str((j, x, y)))
+                    #     print("idx: %d" % idx)
+                    #     print("Checked indexes: " + str([
+                    #         (a, b, indexes[(a, b)])
+                    #         for a in range(max(0, ix-no_duplicates_radius), min(max_ix, ix+no_duplicates_radius))
+                    #         for b in range(max(0, iy-no_duplicates_radius), min(max_iy, iy+no_duplicates_radius))
+                    #     ]))
+                    if no_duplicates_radius > 0 and any([
+                        idx == indexes[(a, b)]
+                        for a in range(max(0, ix-no_duplicates_radius), min(max_ix, ix+no_duplicates_radius))
+                        for b in range(max(0, iy-no_duplicates_radius), min(max_iy, iy+no_duplicates_radius))
+                        if a**2 + b**2 <= no_duplicates_radius**2
+                    ]):
+                        best_k += 1
+                    else:
+                        break
+
                 closest_tile = tile_images[idx]
+                indexes[(ix, iy)] = idx
             except Exception:
                 import ipdb; ipdb.set_trace()
             
@@ -92,6 +126,8 @@ def mosaicify(
             # record the performance
             elapsed = time.time() - starttime
             timings.append(elapsed)
+
+        # print("indexes: " + str(indexes))
 
         # should we adjust opacity? 
         if opacity > 0:
