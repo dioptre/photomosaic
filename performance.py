@@ -37,7 +37,7 @@ def mosaicify(
         target_image, 
         tile_h, tile_w, 
         tile_index, tile_images, 
-        verbose=0,
+        verbose=1,
         use_stabilization=False,
         stabilization_threshold=0.95,
         randomness=0.0,
