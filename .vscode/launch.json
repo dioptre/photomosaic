@@ -18,7 +18,7 @@
             "request": "launch",
             "program": "mosaic.py",
             "console": "integratedTerminal",
-            "args": "--target media/example/image_0001.jpg --savepath \"media/output/%s-mosaic-scale-%d.jpg\" --codebook-dir media/faces/other_faces --scale 10  --height-aspect 5920 --width-aspect 8960"
+            "args": "--target media/example/image_0001.jpg --savepath \"media/output/%s-mosaic-scale-%d.jpg\" --codebook-dir media/faces/other_faces --scale 0.01  --height-aspect 592 --width-aspect 896"
         }
     ]
 }

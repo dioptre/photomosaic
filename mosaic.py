@@ -1,5 +1,6 @@
 import os
 import argparse
+import traceback
 
 import cv2
 import numpy as np
@@ -28,7 +29,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--codebook-dir", dest='codebook_dir', type=str, required=True, help="Source folder of images")
 parser.add_argument("--savepath", dest='savepath', type=str, required=True, help="Where to save image to. Scale/filename is used in formatting.")
 parser.add_argument("--target", dest='target', type=str, required=True, help="Image to make mosaic from")
-parser.add_argument("--scale", dest='scale', type=int, required=True, help="How large to make tiles")
+parser.add_argument("--scale", dest='scale', type=float, required=True, help="How large to make tiles")
 
 # optional
 parser.add_argument("--best-k", dest='best_k', type=int, default=1, help="Choose tile from top K best matches")
@@ -84,7 +85,8 @@ mosaic_img = mosaic.astype(np.uint8)
 try:
     plt.figure(figsize = (64, 30))
     plt.imshow(mosaic_img[:, :, [2,1,0]], interpolation='nearest')
-except:
+except Exception as ex:
+    print(ex, traceback.format_exc())
     pass
 
 # save to disk

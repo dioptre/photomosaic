@@ -123,7 +123,7 @@ def index_images(
 
         # nothing cached, let's index
         path_jobs = [(p, height, width, nchannels, aspect_ratio, use_detect_faces) for p in paths]  #[:200]
-        pool = ThreadPool(nprocesses)
+        pool = ThreadPool(1 or nprocesses)
         results = pool.map(load_and_vectorize_image, path_jobs)
         pool.close()
 

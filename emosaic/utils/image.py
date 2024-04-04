@@ -51,12 +51,10 @@ def load_and_vectorize_image(args):
   path, h, w, c, aspect_ratio, use_detect_faces = args
   image = Image(path, detect_faces=use_detect_faces)
   img = image.compute_statistics()
-  if image.aspect_ratio == aspect_ratio:
-    v = to_vector(img, h, w, c)
-    return image, v
-  else:
-    return None, None
-
+  
+  v = to_vector(img, h, w, c)
+  return image, v
+  
 def divide_image(img, pixels):
   """
   img: numpy ndarray (3D, where 3rd channel is channel)
