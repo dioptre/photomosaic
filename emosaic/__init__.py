@@ -60,7 +60,8 @@ def mosaicify(
                         weighting = deviation_from_max / deviation_from_max.sum()
                         idx = np.random.choice(I[0], p=weighting)
                 closest_tile = tile_images[idx]
-            except Exception:
+            except Exception as ex:
+                print(ex, traceback.format_exc())
                 import ipdb; ipdb.set_trace()
             
             # write into mosaic
