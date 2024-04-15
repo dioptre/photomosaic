@@ -7,8 +7,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from emosaic.utils.indexing import index_images
+from emosaic.utils.normalize import normalize_images
 from emosaic import mosaicify
-
 
 """
 Example usage:
@@ -27,6 +27,8 @@ parser = argparse.ArgumentParser()
 
 # required
 parser.add_argument("--codebook-dir", dest='codebook_dir', type=str, required=True, help="Source folder of images")
+parser.add_argument("--normalize-dir", dest='normalize_dir', type=str, required=False, help="Normalized folder of images")
+
 parser.add_argument("--savepath", dest='savepath', type=str, required=True, help="Where to save image to. Scale/filename is used in formatting.")
 parser.add_argument("--target", dest='target', type=str, required=True, help="Image to make mosaic from")
 parser.add_argument("--scale", dest='scale', type=float, required=True, help="How large to make tiles")
@@ -37,42 +39,52 @@ parser.add_argument("--no-trim", dest='no_trim', action='store_true', default=Fa
 parser.add_argument("--detect-faces", dest='detect_faces', action='store_true', default=False, help="If we should only include pictures with faces in them")
 parser.add_argument("--opacity", dest='opacity', type=float, default=0.0, help="Opacity of the original photo")
 parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
-parser.add_argument("--height-aspect", dest='height_aspect', type=float, default=4.0, help="Height aspect")
-parser.add_argument("--width-aspect", dest='width_aspect', type=float, default=3.0, help="Width aspect")
 parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1., 
     help="Downsize the image by this much before vectorizing")
 
 args = parser.parse_args()
 
-print("=== Creating Mosaic Image ===")
-print("Images=%s, target=%s, scale=%d, aspect_ratio=%.4f, vectorization=%d, randomness=%.2f, faces=%s" % (
-    args.codebook_dir, args.target, args.scale, args.height_aspect / args.width_aspect, 
-    args.vectorization_factor, args.randomness, args.detect_faces))
-
-# sizing for mosaic tiles
-height, width = int(args.height_aspect * args.scale), int(args.width_aspect * args.scale)
-aspect_ratio = height / float(width)
-
 # get target image
 target_image = cv2.imread(args.target)
+target_height = np.size(target_image, 0)
+target_width = np.size(target_image, 1)
+tile_h = int(target_height / float(args.scale))
+tile_w = int(target_width / float(args.scale))
+aspect_ratio = target_height / float(target_width)
+
+print("=== Creating Mosaic Image ===")
+print("Images=%s, target=%s, scale=%d, vectorization=%d, randomness=%.2f, faces=%s" % (
+    args.codebook_dir, args.target, args.scale,
+    args.vectorization_factor, args.randomness, args.detect_faces))
+
+# normalize images
+if args.normalize_dir:
+    normalize_images(
+        target_height,
+        target_width,
+        path=args.codebook_dir,
+        output_path=args.normalize_dir,
+        scale=args.scale
+    )
 
 # index all those images
-tile_index, _, tile_images = index_images(
-    paths='%s/*.jpg' % args.codebook_dir,
+tile_index, images = index_images(
+    path=args.normalize_dir or args.codebook_dir,
     aspect_ratio=aspect_ratio, 
-    height=height,
-    width=width,
+    height=tile_h,
+    width=tile_w,
     vectorization_scaling_factor=args.vectorization_factor,
-    caching=True,
+    caching=False,
     use_detect_faces=args.detect_faces,
+    nprocesses=4
 )
 
-print("Using %d tile codebook images..." % len(tile_images))
+print("Using %d tile codebook images..." % len(images))
 
 # transform!
-mosaic, rect_starts, _ = mosaicify(
-    target_image, height, width,
-    tile_index, tile_images,
+mosaic, rect_starts, arr = mosaicify(
+    target_image, tile_h, tile_w,
+    tile_index, images,
     randomness=args.randomness,
     opacity=args.opacity,
     best_k=args.best_k,
@@ -80,14 +92,6 @@ mosaic, rect_starts, _ = mosaicify(
 
 # convert to 8 bit unsigned integers
 mosaic_img = mosaic.astype(np.uint8)
-
-# show in notebook, if running inside one
-try:
-    plt.figure(figsize = (64, 30))
-    plt.imshow(mosaic_img[:, :, [2,1,0]], interpolation='nearest')
-except Exception as ex:
-    print(ex, traceback.format_exc())
-    pass
 
 # save to disk
 filename = os.path.basename(args.target).split('.')[0]

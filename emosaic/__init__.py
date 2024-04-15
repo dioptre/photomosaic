@@ -11,7 +11,7 @@ from emosaic.utils.image import divide_image_rectangularly, to_vector
 def mosaicify(
         target_image, 
         tile_h, tile_w, 
-        tile_index, tile_images, 
+        tile_index, images, 
         verbose=0,
         use_stabilization=False,
         stabilization_threshold=0.95,
@@ -23,6 +23,10 @@ def mosaicify(
         no_duplicates=True,
     ):
     try:
+        tile_images = []
+        for im in images:
+            tile_images.append(im.load_image())
+
         rect_starts = divide_image_rectangularly(target_image, h_pixels=tile_h, w_pixels=tile_w)
         mosaic = np.zeros(target_image.shape)
 
@@ -62,7 +66,7 @@ def mosaicify(
                 closest_tile = tile_images[idx]
             except Exception as ex:
                 print(ex, traceback.format_exc())
-                import ipdb; ipdb.set_trace()
+                # import ipdb; ipdb.set_trace()
             
             # write into mosaic
             if random.random() < randomness:
@@ -113,5 +117,5 @@ def mosaicify(
 
     except Exception:
         print(traceback.format_exc())
-        import ipdb; ipdb.set_trace()
-        return None, None, None
+        #import ipdb; ipdb.set_trace()
+        return None, None

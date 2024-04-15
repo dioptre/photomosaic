@@ -11,11 +11,6 @@ from emosaic.utils.misc import ensure_directory
 from emosaic.utils.indexing import index_at_multiple_scales
 from emosaic.utils.misc import is_running_jupyter
 
-if is_running_jupyter():
-    from tqdm import tqdm_notebook as tqdm
-else:
-    from tqdm import tqdm
-
 """
 Example:
 
@@ -74,13 +69,12 @@ ensure_directory(tmp_dir)
 img_paths = []
 scales = range(args.min_scale, args.max_scale + 1, 1)
 
-with tqdm(desc='Indexing:', total=len(scales)) as pbar:
-    for i, scale in enumerate(scales):
-        img_savepath = os.path.join(tmp_dir, "%08d.jpg" % i)
-        mosaic = scale2mosaic[scale]
-        cv2.imwrite(img_savepath, mosaic)
-        img_paths.append(img_savepath)
-        pbar.update(1)
+
+for i, scale in enumerate(scales):
+    img_savepath = os.path.join(tmp_dir, "%08d.jpg" % i)
+    mosaic = scale2mosaic[scale]
+    cv2.imwrite(img_savepath, mosaic)
+    img_paths.append(img_savepath)
 
 # create the GIF!
 savepath = args.savepath % (

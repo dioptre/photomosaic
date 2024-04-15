@@ -13,12 +13,28 @@
             "args": "${command:pickArgs}"
         },
         {
-            "name": "Mosaid Test",
+            "name": "Mosaic Test",
             "type": "debugpy",
             "request": "launch",
             "program": "mosaic.py",
             "console": "integratedTerminal",
             "args": "--target media/example/image_0001.jpg --savepath \"media/output/%s-mosaic-scale-%d.jpg\" --codebook-dir media/faces/other_faces --scale 0.5  --height-aspect 592 --width-aspect 896"
+        },
+        {
+            "name": "Personal Test",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--target /Users/andrewgrosser/Downloads/xmas/n.jpg --normalize-dir \"/tmp/go\" --savepath \"media/output/%s-n-mosaic-%d.jpg\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --scale 16"
+        },
+        {
+            "name": "Personal Retest",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 16"
         }
     ]
 }

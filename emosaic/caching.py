@@ -85,7 +85,7 @@ class MosaicCacheConfig(object):
         # success! 
 
     # saving
-    cache_config.save(matrix, images, tile_images)
+    cache_config.save(matrix, images)
     """
     def __init__(self,
             paths,
@@ -142,20 +142,19 @@ class MosaicCacheConfig(object):
                 return data
         return None
 
-    def save(self, matrix, images, tile_images):
+    def save(self, matrix, images):
         """
         Fields to save:
 
         - 'index_class' (eg: faiss.IndexFlatL2)
         - 'dimensions' (for Faiss index)
         - 'images': Image objects list
-        - 'tile_images': resized list of images as numpy arrays
         - 'paths': list of filepaths for images
         - 'matrix'
         - 'height', 'width', 'nchannels'
 
         The following MUST be in the same order:
-            -> matrix, paths, images, tile_images
+            -> matrix, paths, images
 
         Otherwise it won't work!
         """
@@ -168,7 +167,6 @@ class MosaicCacheConfig(object):
                     index_class=self.index_class,
                     dimensions=self.dimensions,
                     images=images,
-                    tile_images=tile_images,
                     paths=self.paths,
                     matrix=matrix,
                     height=self.height, 

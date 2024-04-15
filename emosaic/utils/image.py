@@ -51,7 +51,7 @@ def load_and_vectorize_image(args):
   path, h, w, c, aspect_ratio, use_detect_faces = args
   image = Image(path, detect_faces=use_detect_faces)
   img = image.compute_statistics()
-  
+  print(f"Processing {path}")
   v = to_vector(img, h, w, c)
   return image, v
   

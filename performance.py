@@ -12,11 +12,6 @@ from emosaic.utils.image import divide_image_rectangularly, to_vector, compute_h
 from emosaic.utils.indexing import index_images
 from emosaic.utils.misc import is_running_jupyter
 
-if is_running_jupyter():
-    from tqdm import tqdm_notebook as tqdm
-else:
-    from tqdm import tqdm
-
 """
 run performance.py \
     --codebook-dir media/pics/ \

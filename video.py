@@ -13,10 +13,6 @@ from emosaic.utils.video import extract_audio, add_audio_to_video, calculate_fra
 from emosaic.utils.misc import is_running_jupyter
 from emosaic.utils.image import rotate_bound
 
-if is_running_jupyter():
-    from tqdm import tqdm_notebook as tqdm
-else:
-    from tqdm import tqdm
 
 """
 Example usage:
@@ -95,66 +91,66 @@ timings = []
 frame_count = 0
 num_frames = calculate_framecount(args.target)
 
-with tqdm(desc='Encoding:', total=num_frames) as pbar:
-    while cap.isOpened():
-        # early stopping option
-        if args.seconds > 0:
-            if frame_count > int(args.fps * args.seconds):
-                print("Done! Reached enough frames.")
-                break
 
-        # grab our new frame, check that it worked
-        starttime = time.time()
-        ret, frame = cap.read()
-
-        # initialize our writer to correct dimensions
-        # once we know the video resolution
-        if out is None:
-            
-            # yeah, I know. OpenCV expects the write shape 
-            # to be (width, height). WHY THE FUCK, OPENCV, WHY.
-            # if you don't do this you'll get silent errors that
-            # waste an entire hour of your life.
-            if rotation == 90:
-                write_shape = (frame.shape[0], frame.shape[1])
-            else:
-                write_shape = (frame.shape[1], frame.shape[0])
-            
-            # create our writer 
-            out = cv2.VideoWriter(
-                video_only_mosaic_video_savepath,
-                fourcc, args.fps, write_shape, True)
-            
-        elif not ret or frame is None:
-            # we're done!
+while cap.isOpened():
+    # early stopping option
+    if args.seconds > 0:
+        if frame_count > int(args.fps * args.seconds):
+            print("Done! Reached enough frames.")
             break
 
-        try:
-            # encode image using codebook
-            mosaic, _, _ = mosaicify(
-                frame, height, width,
-                tile_index, tile_images,
-                use_stabilization=True,
-                stabilization_threshold=args.stabilization_threshold,
-                randomness=args.randomness)
+    # grab our new frame, check that it worked
+    starttime = time.time()
+    ret, frame = cap.read()
+
+    # initialize our writer to correct dimensions
+    # once we know the video resolution
+    if out is None:
         
-            # convert to unsigned 8bit int
-            to_write = mosaic.astype(np.uint8)
-            
-            if rotation != 0:
-                out.write(rotate_bound(to_write, rotation))
-            else:
-                out.write(to_write)
+        # yeah, I know. OpenCV expects the write shape 
+        # to be (width, height). WHY THE FUCK, OPENCV, WHY.
+        # if you don't do this you'll get silent errors that
+        # waste an entire hour of your life.
+        if rotation == 90:
+            write_shape = (frame.shape[0], frame.shape[1])
+        else:
+            write_shape = (frame.shape[1], frame.shape[0])
+        
+        # create our writer 
+        out = cv2.VideoWriter(
+            video_only_mosaic_video_savepath,
+            fourcc, args.fps, write_shape, True)
+        
+    elif not ret or frame is None:
+        # we're done!
+        break
 
-        except Exception as e:
-            print("Error writing frame:", e)
-            break
+    try:
+        # encode image using codebook
+        mosaic, _, _ = mosaicify(
+            frame, height, width,
+            tile_index, tile_images,
+            use_stabilization=True,
+            stabilization_threshold=args.stabilization_threshold,
+            randomness=args.randomness)
+    
+        # convert to unsigned 8bit int
+        to_write = mosaic.astype(np.uint8)
+        
+        if rotation != 0:
+            out.write(rotate_bound(to_write, rotation))
+        else:
+            out.write(to_write)
 
-        # record timing
-        elapsed = time.time() - starttime
-        timings.append(elapsed)
-        frame_count += 1
-        pbar.update(1)
+    except Exception as e:
+        print("Error writing frame:", e)
+        break
+
+    # record timing
+    elapsed = time.time() - starttime
+    timings.append(elapsed)
+    frame_count += 1
+        
 
 # print("Done! Releasing resources...")
 cap.release()
