@@ -26,7 +26,7 @@
             "request": "launch",
             "program": "mosaic.py",
             "console": "integratedTerminal",
-            "args": "--target /Users/andrewgrosser/Downloads/xmas/n.jpg --normalize-dir \"/tmp/go\" --savepath \"media/output/%s-n-mosaic-%d.jpg\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --scale 16"
+            "args": "--target /Users/andrewgrosser/Downloads/xmas/n.jpg --normalize-dir \"/tmp/go\" --savepath \"media/output/%s-n-mosaic-%d.jpg\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --scale 32 --no-duplicates-radius 10"
         },
         {
             "name": "Personal Retest",
@@ -34,7 +34,7 @@
             "request": "launch",
             "program": "mosaic.py",
             "console": "integratedTerminal",
-            "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 16"
+            "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 32 --no-duplicates-radius 10"
         }
     ]
 }

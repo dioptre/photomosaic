@@ -7,6 +7,10 @@ import cv2
 
 from emosaic.utils.image import divide_image_rectangularly, to_vector
 
+def frange(x, y, jump=1):
+  while x < y:
+    yield x
+    x += jump
 
 def mosaicify(
         target_image, 
@@ -20,7 +24,7 @@ def mosaicify(
         best_k=1,
         trim=True,
         uniform_k=True,
-        no_duplicates=True,
+        no_duplicates_radius=0,        
     ):
     try:
         tile_images = []
@@ -28,6 +32,11 @@ def mosaicify(
             tile_images.append(im.load_image())
 
         rect_starts = divide_image_rectangularly(target_image, h_pixels=tile_h, w_pixels=tile_w)
+
+        indexes = {(coord[0]/tile_h, coord[1]/tile_w): None for coord in rect_starts}
+        max_ix = max([coord[0] for coord in indexes.keys()])
+        max_iy = max([coord[1] for coord in indexes.keys()])
+
         mosaic = np.zeros(target_image.shape)
 
         if use_stabilization:
@@ -43,6 +52,8 @@ def mosaicify(
         for (j, (x, y)) in enumerate(rect_starts):
             starttime = time.time()
             
+            ix, iy = x / tile_h, y / tile_w
+
             # get our target region & vectorize it
             target = target_image[x : x + tile_h, y : y + tile_w]
             target_h, target_w, _ = target.shape
@@ -50,11 +61,26 @@ def mosaicify(
             
             # find nearest codebook image
             try:
-                if best_k == 1:
-                    dist, I = tile_index.search(v, k=1)
-                    idx = I[0][0]
-                else:
-                    if uniform_k:
+                # if best_k == 1:
+                #     dist, I = tile_index.search(v, k=1)
+                #     idx = I[0][0]
+                # else:
+                #     if uniform_k:
+                #         dist, I = tile_index.search(v, k=best_k)
+                #         idx = random.choice(I[0])
+                #     else:
+                #         dist, I = tile_index.search(v, k=best_k + 1)
+                #         distances = dist[0]
+                #         deviation_from_max = np.abs(distances - distances.max())
+                #         weighting = deviation_from_max / deviation_from_max.sum()
+                #         idx = np.random.choice(I[0], p=weighting)
+                # closest_tile = tile_images[idx]
+                while True:
+
+                    if best_k == 1:
+                        dist, I = tile_index.search(v, k=1)
+                        idx = I[0][0]
+                    elif uniform_k:
                         dist, I = tile_index.search(v, k=best_k)
                         idx = random.choice(I[0])
                     else:
@@ -63,10 +89,33 @@ def mosaicify(
                         deviation_from_max = np.abs(distances - distances.max())
                         weighting = deviation_from_max / deviation_from_max.sum()
                         idx = np.random.choice(I[0], p=weighting)
+
+                    # if verbose:
+                    #     print("(j, x, y): " + str((j, x, y)))
+                    #     print("idx: %d" % idx)
+                    #     print("Checked indexes: " + str([
+                    #         (a, b, indexes[(a, b)])
+                    #         for a in frange(max(0, ix-no_duplicates_radius), min(max_ix, ix+no_duplicates_radius))
+                    #         for b in frange(max(0, iy-no_duplicates_radius), min(max_iy, iy+no_duplicates_radius))
+                    #     ]))
+                    try:
+                        if no_duplicates_radius > 0 and any([
+                            idx == indexes[(a, b)]
+                            for a in frange(max(0, ix-no_duplicates_radius), min(max_ix, ix+no_duplicates_radius))
+                            for b in frange(max(0, iy-no_duplicates_radius), min(max_iy, iy+no_duplicates_radius))
+                            if a**2 + b**2 <= no_duplicates_radius**2
+                        ]):
+                            best_k += 1
+                    except Exception as ex:
+                        print(ex)
+                        break
+                    else:
+                        break
+
                 closest_tile = tile_images[idx]
+                indexes[(ix, iy)] = idx
             except Exception as ex:
-                print(ex, traceback.format_exc())
-                # import ipdb; ipdb.set_trace()
+                print(ex, traceback.format_exc())                
             
             # write into mosaic
             if random.random() < randomness:

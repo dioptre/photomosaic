@@ -32,6 +32,7 @@ parser.add_argument("--normalize-dir", dest='normalize_dir', type=str, required=
 parser.add_argument("--savepath", dest='savepath', type=str, required=True, help="Where to save image to. Scale/filename is used in formatting.")
 parser.add_argument("--target", dest='target', type=str, required=True, help="Image to make mosaic from")
 parser.add_argument("--scale", dest='scale', type=float, required=True, help="How large to make tiles")
+parser.add_argument("--resize", dest='resize', type=float, required=False, default=1.0, help="How large to make target: default 1x")
 
 # optional
 parser.add_argument("--best-k", dest='best_k', type=int, default=1, help="Choose tile from top K best matches")
@@ -41,6 +42,7 @@ parser.add_argument("--opacity", dest='opacity', type=float, default=0.0, help="
 parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, help="Probability to use random tile")
 parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1., 
     help="Downsize the image by this much before vectorizing")
+parser.add_argument("--no-duplicates-radius", dest='no_duplicates_radius', type=int, default=0, help="No duplicates over a given radius")
 
 args = parser.parse_args()
 
@@ -51,6 +53,10 @@ target_width = np.size(target_image, 1)
 tile_h = int(target_height / float(args.scale))
 tile_w = int(target_width / float(args.scale))
 aspect_ratio = target_height / float(target_width)
+if args.resize != 1.0:
+    target_image = cv2.resize(target_image, (target_height*args.resize, target_width*args.resize))
+    target_height = np.size(target_image, 0)
+    target_width = np.size(target_image, 1)
 
 print("=== Creating Mosaic Image ===")
 print("Images=%s, target=%s, scale=%d, vectorization=%d, randomness=%.2f, faces=%s" % (
@@ -60,8 +66,8 @@ print("Images=%s, target=%s, scale=%d, vectorization=%d, randomness=%.2f, faces=
 # normalize images
 if args.normalize_dir:
     normalize_images(
-        target_height,
-        target_width,
+        tile_h,
+        tile_w,
         path=args.codebook_dir,
         output_path=args.normalize_dir,
         scale=args.scale
@@ -88,7 +94,10 @@ mosaic, rect_starts, arr = mosaicify(
     randomness=args.randomness,
     opacity=args.opacity,
     best_k=args.best_k,
-    trim=not args.no_trim)
+    trim=not args.no_trim,
+    no_duplicates_radius=args.no_duplicates_radius,
+    verbose=True
+    )
 
 # convert to 8 bit unsigned integers
 mosaic_img = mosaic.astype(np.uint8)
