@@ -54,7 +54,7 @@ tile_h = int(target_height / float(args.scale))
 tile_w = int(target_width / float(args.scale))
 aspect_ratio = target_height / float(target_width)
 if args.resize != 1.0:
-    target_image = cv2.resize(target_image, (target_height*args.resize, target_width*args.resize))
+    target_image = cv2.resize(target_image, (int(target_width*args.resize), int(target_height*args.resize)))
     target_height = np.size(target_image, 0)
     target_width = np.size(target_image, 1)
 
