@@ -43,6 +43,7 @@ parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, 
 parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1., 
     help="Downsize the image by this much before vectorizing")
 parser.add_argument("--no-duplicates-radius", dest='no_duplicates_radius', type=int, default=0, help="No duplicates over a given radius")
+parser.add_argument("--uniform-k", dest='uniform_k', type=bool, default=True, help="No duplicates over a given radius")
 
 args = parser.parse_args()
 
@@ -96,7 +97,8 @@ mosaic, rect_starts, arr = mosaicify(
     best_k=args.best_k,
     trim=not args.no_trim,
     no_duplicates_radius=args.no_duplicates_radius,
-    verbose=True
+    verbose=True,
+    uniform_k=args.uniform_k
     )
 
 # convert to 8 bit unsigned integers

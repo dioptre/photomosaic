@@ -59,6 +59,7 @@ def mosaicify(
             target_h, target_w, _ = target.shape
             v = to_vector(target, tile_h, tile_w)
             
+            # https://github.com/facebookresearch/faiss/wiki/Getting-started
             # find nearest codebook image
             try:
                 # if best_k == 1:

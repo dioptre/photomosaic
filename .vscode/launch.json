@@ -35,6 +35,38 @@
             "program": "mosaic.py",
             "console": "integratedTerminal",
             "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 32 --no-duplicates-radius 10 --resize 10"
+        },
+        {
+            "name": "Personal Bad",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 32 --no-duplicates-radius 75 --resize 10"
+        },
+        {
+            "name": "Personal Badx",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 32 --no-duplicates-radius 300 --resize 10"
+        },
+        {
+            "name": "Personal Best-k 30",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 32 --no-duplicates-radius 10 --resize 10 --best-k 30"
+        },
+        {
+            "name": "Personal No-uniform 30",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 32 --no-duplicates-radius 5 --resize 10 --best-k 30 --uniform-k false"
         }
     ]
 }
