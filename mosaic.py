@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from emosaic.utils.indexing import index_images
 from emosaic.utils.normalize import normalize_images
 from emosaic import mosaicify
+from emosaic.utils.args import str2bool
 
 """
 Example usage:
@@ -43,7 +44,7 @@ parser.add_argument("--randomness", dest='randomness', type=float, default=0.0, 
 parser.add_argument("--vectorization-factor", dest='vectorization_factor', type=float, default=1., 
     help="Downsize the image by this much before vectorizing")
 parser.add_argument("--no-duplicates-radius", dest='no_duplicates_radius', type=int, default=0, help="No duplicates over a given radius")
-parser.add_argument("--uniform-k", dest='uniform_k', type=bool, default=True, help="No duplicates over a given radius")
+parser.add_argument("--uniform-k", dest='uniform_k', type=str2bool, nargs='?', const=True, default=True, help="No duplicates over a given radius")
 
 args = parser.parse_args()
 
@@ -53,6 +54,17 @@ target_height = np.size(target_image, 0)
 target_width = np.size(target_image, 1)
 tile_h = int(target_height / float(args.scale))
 tile_w = int(target_width / float(args.scale))
+
+# normalize images
+if args.normalize_dir:
+    print("=== Normalizing Codebook Images ===")
+    normalize_images(
+        tile_h,
+        tile_w,
+        path=args.codebook_dir,
+        output_path=args.normalize_dir
+    )
+
 aspect_ratio = target_height / float(target_width)
 if args.resize != 1.0:
     target_image = cv2.resize(target_image, (int(target_width*args.resize), int(target_height*args.resize)))
@@ -64,15 +76,6 @@ print("Images=%s, target=%s, scale=%d, vectorization=%d, randomness=%.2f, faces=
     args.codebook_dir, args.target, args.scale,
     args.vectorization_factor, args.randomness, args.detect_faces))
 
-# normalize images
-if args.normalize_dir:
-    normalize_images(
-        tile_h,
-        tile_w,
-        path=args.codebook_dir,
-        output_path=args.normalize_dir,
-        scale=args.scale
-    )
 
 # index all those images
 tile_index, images = index_images(

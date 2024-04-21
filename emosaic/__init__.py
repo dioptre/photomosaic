@@ -166,6 +166,6 @@ def mosaicify(
         return mosaic, rect_starts, arr
 
     except Exception:
-        print(traceback.format_exc())
+        print(traceback.format_exc(), x, y)
         #import ipdb; ipdb.set_trace()
-        return None, None
+        return None, None, None

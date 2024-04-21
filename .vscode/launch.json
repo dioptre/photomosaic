@@ -66,7 +66,31 @@
             "request": "launch",
             "program": "mosaic.py",
             "console": "integratedTerminal",
-            "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 32 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k false"
+            "args": "--normalize-dir \"/tmp/go\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 4 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+        },
+        {
+            "name": "Restart Personal No-uniform 30 - Run 4",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir /tmp/go --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 4 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+        },
+        {
+            "name": "Restart Personal No-uniform 30 - Run 5",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--normalize-dir \"/tmp/gb\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 8 --no-duplicates-radius 10 --resize 8 --best-k 30 --uniform-k False"
+        },
+        {
+            "name": "Restart Personal No-uniform 30 - Run 6",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--normalize-dir \"/tmp/gb\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
         }
     ]
 }
