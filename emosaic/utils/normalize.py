@@ -13,6 +13,7 @@ import traceback
 
 register_heif_opener()
 
+
 def resize_image(target_height, target_width, img):
     border_v = 0
     border_h = 0
@@ -34,6 +35,8 @@ def normalize_images(
                 
         os.makedirs(output_path, exist_ok=True)
 
+        hsvs = []
+        hsvs_files = []
         # Get the median image dimensions
         filenames = os.listdir(path)
         
@@ -47,20 +50,53 @@ def normalize_images(
                 if extension == "heic":
                     try:
                         heif_file = open_heif(f, convert_hdr_to_8bit=False, bgr_mode=True)
-                        np_array = np.asarray(heif_file)                        
-                        cv2.imwrite(o, resize_image(target_height, target_width, np_array))
+                        np_array = np.asarray(heif_file)          
+                        img = resize_image(target_height, target_width, np_array)              
+                        hsvs.append(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
+                        hsvs_files.append(f)  
+                        cv2.imwrite(o, img)
                         continue
                     except:
                         image = cv2.imread(f)
-                        cv2.imwrite(o, resize_image(target_height, target_width, image))
+                        img = resize_image(target_height, target_width, image)
+                        hsvs.append(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
+                        hsvs_files.append(f)  
+                        cv2.imwrite(o, img)
                 elif extension=="mp4" or extension=="mov":
                     vidcap = cv2.VideoCapture(f)
                     success,image = vidcap.read()
-                    cv2.imwrite(o, resize_image(target_height, target_width, image))
+                    img = resize_image(target_height, target_width, image)
+                    hsvs.append(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
+                    hsvs_files.append(f)  
+                    cv2.imwrite(o, img)
                 else:
                     image = cv2.imread(f)
-                    cv2.imwrite(o, resize_image(target_height, target_width, image))
+                    img = resize_image(target_height, target_width, image)
+                    hsvs.append(cv2.cvtColor(img, cv2.COLOR_BGR2HSV))
+                    hsvs_files.append(f)                    
+                    cv2.imwrite(o, img)
             except Exception as ex:
                  print(ex, traceback.format_exc())
                  continue
         
+        # Compute histograms (focusing on the Hue channel for color images)
+        histograms = [cv2.calcHist([img], [0], None, [180], [0, 180]) for img in hsvs]
+
+        # Compare histograms using a method (e.g., correlation)
+        similarity_matrix = np.zeros((len(hsvs), len(hsvs)))
+        for i in range(len(hsvs)):
+            for j in range(len(hsvs)):
+                similarity_matrix[i, j] = cv2.compareHist(histograms[i], histograms[j], cv2.HISTCMP_CORREL)
+
+        # Sum similarities for each image
+        np.fill_diagonal(similarity_matrix, 0)
+        similarity_scores = np.sum(similarity_matrix, axis=0)
+        sorted_indices = np.argsort(similarity_scores)[::-1]  # Descending order
+        top_similar = sorted_indices[0:30]
+        # Find the index of the image with the highest similarity score
+        #most_similar_index = np.argmax(similarity_scores)
+        similar = []
+        for i in top_similar:
+            print(f"""Most similar file to each other:  {hsvs_files[i]}""")
+            similar.append(hsvs_files[i])
+        return similar

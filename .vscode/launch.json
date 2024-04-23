@@ -91,6 +91,44 @@
             "program": "mosaic.py",
             "console": "integratedTerminal",
             "args": "--normalize-dir \"/tmp/gb\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+        },
+        {
+            "name": "BAD Restart Personal No-uniform 30 - Run 7",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir \"/tmp/gb\" --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 30 --resize 10 --best-k 30 --uniform-k False"
+        },
+        {
+            "name": "Run 8",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--normalize-dir \"/tmp/gx\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --target /Users/andrewgrosser/Downloads/xmas/IMG_20210323_084757.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+        },{
+            "name": "Run 9",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir \"/tmp/gx\" --target /Users/andrewgrosser/Downloads/xmas/IMG_20211127_161815~2.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+        },{
+            "name": "Run 10",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir \"/tmp/gx\" --target /Users/andrewgrosser/Downloads/xmas/IMG_20210904_132149.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+        },{
+            "name": "Run 11",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--codebook-dir \"/tmp/gx\" --target /Users/andrewgrosser/Downloads/xmas/IMG_7199.MP4 --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
         }
+        
     ]
 }
