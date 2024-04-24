@@ -113,21 +113,68 @@
             "request": "launch",
             "program": "mosaic.py",
             "console": "integratedTerminal",
-            "args": "--codebook-dir \"/tmp/gx\" --target /Users/andrewgrosser/Downloads/xmas/IMG_20211127_161815~2.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+            "args": "--normalize-dir \"/tmp/gy\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --target /Users/andrewgrosser/Downloads/xmas/IMG_20211127_161815~2.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
         },{
             "name": "Run 10",
             "type": "debugpy",
             "request": "launch",
             "program": "mosaic.py",
             "console": "integratedTerminal",
-            "args": "--codebook-dir \"/tmp/gx\" --target /Users/andrewgrosser/Downloads/xmas/IMG_20210904_132149.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+            "args": "--normalize-dir \"/tmp/gy\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --target /Users/andrewgrosser/Downloads/xmas/IMG_20210904_132149.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
         },{
             "name": "Run 11",
             "type": "debugpy",
             "request": "launch",
             "program": "mosaic.py",
             "console": "integratedTerminal",
-            "args": "--codebook-dir \"/tmp/gx\" --target /Users/andrewgrosser/Downloads/xmas/IMG_7199.MP4 --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+            "args": "--normalize-dir \"/tmp/gz\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --target /Users/andrewgrosser/Downloads/xmas/IMG_7199.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --scale 10 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+        },
+        {
+            "name": "Run 12",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--normalize-dir \"/tmp/ga\" --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --scale 3 --no-duplicates-radius 10 --resize 10"
+        },
+        {
+            "name": "Run 13",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--normalize-dir \"/tmp/ga\" --target /Users/andrewgrosser/Downloads/xmas/n.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --scale 3 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+        },
+        {
+            "name": "Run 14",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--normalize-dir \"/tmp/gb\" --target /Users/andrewgrosser/Downloads/xmas/o.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --scale 3 --no-duplicates-radius 10 --resize 10 --best-k 30 --uniform-k False"
+        },
+        {
+            "name": "Run 15",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--normalize-dir \"/tmp/gc\" --target /Users/andrewgrosser/Downloads/xmas/o.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --scale 3 --no-duplicates-radius 10 --resize 10"
+        },
+        {
+            "name": "Run 16",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--normalize-dir \"/tmp/gb\" --target /Users/andrewgrosser/Downloads/xmas/o.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --scale 3 --no-duplicates-radius 10 --resize 10 --best-k 66 --uniform-k False"
+        },{
+            "name": "Run 17",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mosaic.py",
+            "console": "integratedTerminal",
+            "args": "--normalize-dir \"/tmp/gf\" --target /Users/andrewgrosser/Downloads/xmas/IMG_20210904_132149.jpg --savepath \"media/output/%s-n-mosaic-%d.jpg\" --codebook-dir /Users/andrewgrosser/Downloads/xmas --scale 3 --no-duplicates-radius 10 --resize 10 --best-k 66 --uniform-k False"
         }
         
     ]
